@@ -16,11 +16,20 @@ import java.util.Date;
 public class SendMsgController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
     @GetMapping("sendMsg/{message}")
     public void sendMsg(@PathVariable String message) {
-        log.info("当前时间:{},发送一条消息给两个ttl队列:{}",new Date(),message);
-        rabbitTemplate.convertAndSend("X","XA","消息来自ttl的为10s对的队列" + message);
-        rabbitTemplate.convertAndSend("X","XB","消息来自ttl的为40s对的队列" + message);
+        log.info("当前时间:{},发送一条消息给两个ttl队列:{}", new Date(), message);
+        rabbitTemplate.convertAndSend("X", "XA", "消息来自ttl的为10s对的队列" + message);
+        rabbitTemplate.convertAndSend("X", "XB", "消息来自ttl的为40s对的队列" + message);
+    }
+    @GetMapping("sendExpirationMsg/{message}/{ttlTime}")
+    public void sendMsg(@PathVariable String message ,@PathVariable String ttlTime) {
+        rabbitTemplate.convertAndSend("X","XC",message, correlationData -> {
+            correlationData.getMessageProperties().setExpiration(ttlTime);
+            return correlationData;
+        });
+        log.info("当前时间：{},发送一条时长{}毫秒 TTL 信息给队列 C:{}", new Date(),ttlTime, message);
     }
 
 }
