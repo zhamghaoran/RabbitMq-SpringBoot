@@ -30,7 +30,7 @@ public class ProduceController {
 
         rabbitTemplate.convertAndSend(
                 DelayedQueueConfig.DELAYED_EXCHANGE_NAME,
-                DelayedQueueConfig.DELAYED_ROUTING_KEY,
+                DelayedQueueConfig.DELAYED_ROUTING_KEY + "123",
                 message, correlationData1);
         log.info("发送消息内容: {}", message);
     }

@@ -18,7 +18,7 @@ public class Consumer {
     @RabbitListener(queues = DelayedQueueConfig.DELAYED_QUEUE_NAME)
     public void receiveMessage(Message message) {
         String msg = new String (message.getBody(),StandardCharsets.UTF_8);
-        log.info("接受到队列confirm.queue的消息：{}",message);
+        log.info("接受到队列confirm.queue的消息：{}",msg);
     }
 
 }
